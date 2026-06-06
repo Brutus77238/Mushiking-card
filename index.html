@@ -2,7 +2,7 @@
 <html lang="zh-TW">
 <head>
     <meta charset="UTF-8">
-    <title>甲蟲王卡片</title>
+    <title>甲蟲王者卡片完美配色複製器</title>
     <style>
         body { font-family: "Microsoft JhengHei", Arial, sans-serif; background-color: #f4f6f9; padding: 20px; margin: 0; }
         .control-panel { background: #fff; padding: 20px; border-radius: 12px; box-shadow: 0 4px 6px rgba(0,0,0,0.05); border-top: 5px solid #52ff26; display: flex; gap: 20px; margin-bottom: 25px; }
@@ -21,15 +21,23 @@
         .pool-item.selected { border-color: #ffc107; background: #fff9e6; box-shadow: 0 0 8px rgba(255,193,7,0.8); }
         .pool-item img { max-width: 100%; max-height: 100%; object-fit: contain; }
         .grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); gap: 20px; padding: 10px 0; }
-        .card { background: white; border-radius: 12px; padding: 20px; text-align: center; box-shadow: 0 4px 10px rgba(0,0,0,0.08); display: flex; flex-direction: column; justify-content: space-between; border: 1px solid #e0e0e0; transition: all 0.2s; position: relative; }
-        .card.targetable { border: 2px dashed #ffc107; cursor: pointer; background: #fffdeb; animation: pulse 1.5s infinite; }
+        .card { background: white; border-radius: 12px; padding: 20px; text-align: center; box-shadow: 0 4px 10px rgba(0,0,0,0.08); display: flex; flex-direction: column; justify-content: space-between; border: 1px solid #e0e0e0; transition: all 0.2s; position: relative; min-height: 400px; }
+        .card.targetable { border: 2px dashed #ffc107; background: #fffdeb; animation: pulse 1.5s infinite; }
         .card-controls { position: absolute; top: 8px; right: 8px; display: flex; gap: 5px; z-index: 10; }
-        .btn-action { background: rgba(0,0,0,0.4); color: white; border: none; border-radius: 4px; padding: 2px 6px; font-size: 11px; cursor: pointer; font-weight: bold; }
+        .btn-action { background: rgba(0,0,0,0.5); color: white; border: none; border-radius: 4px; padding: 2px 6px; font-size: 11px; cursor: pointer; font-weight: bold; }
         .btn-action:hover { background: rgba(0,0,0,0.8); }
         .btn-del { background: rgba(220,53,69,0.6); }
         .btn-del:hover { background: rgba(220,53,69,0.9); }
-        .btn-toggle-green { background: #2da94f; color: white; }
-        .btn-toggle-purple { background: #8a2be2; color: white; }
+        
+        .code-clickable { font-size: 18px; font-weight: bold; margin: 15px 0 5px 0; padding: 14px 6px; border-radius: 6px; border: 1px dashed #ccc; letter-spacing: 0.5px; cursor: pointer; transition: all 0.2s; word-break: break-all; }
+        
+        /* 🎨 精準對應 150 格圖片底色的四種複製框樣式 */
+        .code-green-mode { background-color: #52ff26 !important; color: #000000 !important; border-color: #3ad610; } 
+        .code-purple-mode { background-color: #8a2be2 !important; color: #ffffff !important; border-color: #6a1b9a; } 
+        .code-lime-mode { background-color: #adff2f !important; color: #000000 !important; border-color: #9acd32; } 
+        .code-white-mode { background-color: #ffffff !important; color: #000000 !important; border-color: #cccccc; } 
+        .code-clickable:hover { opacity: 0.9; transform: scale(1.02); box-shadow: 0 2px 6px rgba(0,0,0,0.1); }
+        
         @keyframes pulse {
             0% { box-shadow: 0 0 0 0 rgba(255,193,7,0.4); }
             70% { box-shadow: 0 0 0 10px rgba(255,193,7,0); }
@@ -38,24 +46,19 @@
         .card-img-box { width: 100%; height: 280px; display: flex; align-items: center; justify-content: center; background: #fafafa; border-radius: 8px; margin-bottom: 15px; overflow: hidden; border: 1px solid #f0f0f0; }
         .card img { max-width: 100%; max-height: 100%; object-fit: contain; }
         .no-img { color: #aaa; font-size: 14px; font-style: italic; line-height: 1.6; }
-        .card h3 { margin: 0 0 15px 0; font-size: 16px; padding: 10px; border-radius: 6px; line-height: 1.4; min-height: 30px; display: flex; align-items: center; justify-content: center; font-weight: bold; border: 1px solid rgba(0,0,0,0.1); }
-        .bg-stone { background-color: #ff3b30 !important; color: #ffffff !important; }
-        .bg-paper { background-color: #007aff !important; color: #ffffff !important; }
-        .bg-scissors { background-color: #ffcc00 !important; color: #000000 !important; }
-        .bg-mushiking { background-color: #52ff26 !important; color: #000000 !important; }
-        .bg-nebu { background-color: #ffffff !important; color: #000000 !important; border: 1px solid #ccc !important; }
-        .btn-copy { display: block; width: 100%; padding: 12px 0; border-radius: 6px; cursor: pointer; font-weight: bold; font-size: 16px; transition: background 0.2s; letter-spacing: 0.5px; }
-        .btn-original { background-color: #52ff26; color: #000000; border: 1px solid #3ad610; }
-        .btn-original:hover { background-color: #41e018; }
-        .btn-mod { background-color: #8a2be2; color: #ffffff; border: 1px solid #6a1b9a; }
-        .btn-mod:hover { background-color: #7623c7; }
+        .card h3 { margin: 0 0 10px 0; font-size: 15px; padding: 10px; border-radius: 6px; line-height: 1.4; min-height: 45px; display: flex; align-items: center; justify-content: center; font-weight: bold; border: 1px solid rgba(0,0,0,0.1); }
+        .bg-stone { background-color: #ff3b30 !important; color: #ffffff !important; } 
+        .bg-paper { background-color: #007aff !important; color: #ffffff !important; } 
+        .bg-scissors { background-color: #ffcc00 !important; color: #000000 !important; } 
+        .bg-mushiking { background-color: #52ff26 !important; color: #000000 !important; } 
+        .bg-nebu { background-color: #ffffff !important; color: #000000 !important; border: 1px solid #ccc !important; } 
         .toast { position: fixed; bottom: 30px; right: 30px; background: rgba(0,0,0,0.85); color: white; padding: 12px 25px; border-radius: 6px; display: none; font-weight: bold; box-shadow: 0 4px 12px rgba(0,0,0,0.15); z-index: 1000; }
     </style>
 </head>
 <body>
     <div class="control-panel">
         <div class="excel-input-box">
-            <textarea id="inputText" placeholder="請將 Excel 資料整排複製並貼到這裡..."></textarea>
+            <textarea id="inputText" placeholder="請直接將整排 Excel 欄位複製並貼到這裡..."></textarea>
             <div class="btn-group">
                 <button class="btn-parse" onclick="generateCards()">匯入卡片</button>
                 <button class="btn-clear" onclick="clearAllData()">全部清空重來</button>
@@ -63,7 +66,7 @@
         </div>
         <div class="image-upload-box">
             <div class="upload-btn" onclick="document.getElementById('imgUpload').click()">選擇要配對的圖片</div>
-            <input type="file" id="imgUpload" multiple accept="image/*" style="display:none;">
+            <input type="file" id="imgUpload" multiple accept="image/*" style="display:none;" onchange="handleImageUpload(this)">
             <div class="pool-grid" id="poolGrid"></div>
         </div>
     </div>
@@ -74,13 +77,124 @@
         let selectedPoolItem = null;
         let cardDatabase = [];
 
+        // 🧠 核心：100% 完美鎖定您提供的 150 格圖片底色順序清單（0=綠, 1=紫, 2=亮綠, 3=白）
+        const IMAGE_COLOR_SEQUENCE = [
+            0,0,1,0,0,0,0,1,0,1,0,0,1,0,0,1,0,1,0,1,0,1,0,1,0,1,0,1, // 第1段 (1-28)
+            0,1,0,1,0,1,0,1,0,1,0,1,0,0,1,0,1,0,1,0,0,1,0,0,1,0,0,0,0,0, // 第2段 (29-58)
+            1,2,0,0,1,0,0,1,0,1,1,0,0,1,0,1,0,1,0,1,0,1,0,0,0,1,0,1,0, // 第3段 (59-87)
+            1,0,1,3,0,1,0,1,0,1,0,1,1,0,0,0,0,0,1,0,0, // 第4段 (88-108)
+            0,1,0,0,0,1,0,0,1,0,1,0,1,1,0,0,1,0,1, // 第5段 (109-127)
+            0,0,1,0,0,0,1,0,1,0,1,1,0,0,1,0,1,0,1,0,1,0,1 // 第6段 (128-150)
+        ];
+
         window.onload = function() {
-            const savedData = localStorage.getItem('beetleManualDatabasePerfect');
+            const savedData = localStorage.getItem('beetleManualDatabase');
             if (savedData) {
                 cardDatabase = JSON.parse(savedData);
                 renderDatabase();
             }
         };
+
+        // 處理圖片預覽
+        function handleImageUpload(input) {
+            const poolGrid = document.getElementById('poolGrid');
+            if (!input.files) return;
+            Array.from(input.files).forEach(file => {
+                const reader = new FileReader();
+                reader.onload = function(e) {
+                    const div = document.createElement('div');
+                    div.className = 'pool-item';
+                    div.innerHTML = `<img src="${e.target.result}" alt="pool">`;
+                    div.onclick = function() {
+                        if (selectedPoolItem) selectedPoolItem.classList.remove('selected');
+                        if (selectedPoolItem === this) {
+                            selectedImgSrc = null;
+                            selectedPoolItem = null;
+                            toggleCardTargetable(false);
+                        } else {
+                            selectedPoolItem = this;
+                            this.classList.add('selected');
+                            selectedImgSrc = e.target.result;
+                            toggleCardTargetable(true);
+                        }
+                    };
+                    poolGrid.appendChild(div);
+                };
+                reader.readAsDataURL(file);
+            });
+        }
+
+        function toggleCardTargetable(isTargetable) {
+            const cards = document.querySelectorAll('.card');
+            cards.forEach(card => {
+                if (isTargetable) card.classList.add('targetable');
+                else card.classList.remove('targetable');
+            });
+        }
+
+        // 純過濾核心：100% 只抓最左邊第一欄做為純英數代碼
+        function generateCards() {
+            const text = document.getElementById('inputText').value.trim();
+            if (!text) {
+                showToast("請先貼入 Excel 資料！");
+                return;
+            }
+            const lines = text.split('\n');
+            lines.forEach((line) => {
+                if (!line.trim()) return;
+                
+                let columns = line.split('\t').map(c => c.trim()).filter(c => c !== '');
+                if (columns.length < 2) {
+                    columns = line.split(/\s{2,}/).map(c => c.trim()).filter(c => c !== '');
+                }
+                if (columns.length === 0) return;
+
+                let cardCode = columns[0]; // 強制只拿代碼
+                
+                let attributeType = columns[columns.length - 1];
+                let cardName = "";
+                if (columns.length > 2) {
+                    cardName = columns.slice(1, columns.length - 1).join(' ');
+                } else if (columns.length === 2) {
+                    cardName = columns[1];
+                } else {
+                    cardName = "未知名稱";
+                }
+
+                let currentItemIndex = cardDatabase.length;
+                let assignedColorMode = 0; 
+                
+                if (currentItemIndex < IMAGE_COLOR_SEQUENCE.length) {
+                    assignedColorMode = IMAGE_COLOR_SEQUENCE[currentItemIndex];
+                }
+
+                cardDatabase.push({
+                    code: cardCode, 
+                    name: cardName,
+                    attr: attributeType,
+                    fullLine: line,
+                    img: null,
+                    colorMode: assignedColorMode 
+                });
+            });
+            saveData();
+            renderDatabase();
+            document.getElementById('inputText').value = '';
+            showToast(`成功對照 150 格圖片順序，已匯入 ${lines.length} 張卡片！`);
+        }
+        function checkAndApplyImage(cardElement, index) {
+            if (!selectedImgSrc) return;
+            cardDatabase[index].img = selectedImgSrc;
+            saveData();
+            renderDatabase();
+            if (selectedPoolItem) {
+                selectedPoolItem.classList.remove('selected');
+                selectedPoolItem = null;
+                selectedImgSrc = null;
+            }
+            toggleCardTargetable(false);
+            showToast("圖片配對成功！");
+        }
 
         function renderDatabase() {
             const container = document.getElementById('cardContainer');
@@ -88,182 +202,108 @@
             cardDatabase.forEach((cardData, index) => {
                 const card = document.createElement('div');
                 card.className = 'card';
-                card.setAttribute('data-index', index);
-                card.onclick = function() { checkAndApplyImage(this, index); };
-                let imgHtml = `<span class="no-img">🧩 請先點擊上方圖片<br>再點選此卡片進行配對</span>`;
-                if (cardData.img) { imgHtml = `<img src="${cardData.img}">`; }
-
+                
                 let nameClass = "bg-stone"; 
-                const nameText = cardData.name;
-                const fullLineText = cardData.fullLine || ''; 
+                const nameText = cardData.name ? cardData.name.toUpperCase() : '';
+                const attrText = cardData.attr ? cardData.attr.toUpperCase() : ''; 
 
-                if (nameText.includes("睦義王") || nameText.toUpperCase().includes("MUSHIKING")) {
-                    nameClass = "bg-mushiking";
-                } else if (nameText.toUpperCase().includes("NEBU") || nameText.includes("博士")) {
-                    nameClass = "bg-nebu"; 
-                } else if (fullLineText.toUpperCase().includes("PAPER") || fullLineText.includes("布")) {
-                    nameClass = "bg-paper"; 
-                } else if (fullLineText.toUpperCase().includes("PINCH") || fullLineText.includes("剪刀")) {
-                    nameClass = "bg-scissors";
-                } else if (fullLineText.toUpperCase().includes("HIT") || fullLineText.includes("石頭")) {
-                    nameClass = "bg-stone";
-                }
+                if (nameText.includes("睦義王") || nameText.includes("MUSHIKING")) nameClass = "bg-mushiking";
+                else if (nameText.includes("NEBU") || nameText.includes("博士")) nameClass = "bg-nebu"; 
+                else if (attrText.includes("PAPER") || attrText.includes("布")) nameClass = "bg-paper"; 
+                else if (attrText.includes("PINCH") || attrText.includes("SCISSORS") || attrText.includes("剪刀")) nameClass = "bg-scissors"; 
+                else if (attrText.includes("HIT") || attrText.includes("STONE") || attrText.includes("石頭")) nameClass = "bg-stone"; 
 
-                let btnClass = "btn-original";
-                let prefixText = "[正常] ";
-                if (cardData.isMod === true) {
-                    btnClass = "btn-mod";
-                    prefixText = "[魔德] ";
-                } else if (cardData.isMod === false) {
-                    btnClass = "btn-original";
-                    prefixText = "[正常] ";
-                } else {
-                    if (fullLineText.includes("魔德")) {
-                        cardData.isMod = true;
-                        btnClass = "btn-mod";
-                        prefixText = "[魔德] ";
-                    } else {
-                        cardData.isMod = false;
-                    }
-                }
+                let imgHtml = `<span class="no-img">🧩 請先點擊上方圖片<br>再點選此卡片進行配對</span>`;
+                if (cardData.img) imgHtml = `<img src="${cardData.img}">`; 
+
+                let codeBgClass = 'code-green-mode';
+                if (cardData.colorMode === 1) codeBgClass = 'code-purple-mode';
+                else if (cardData.colorMode === 2) codeBgClass = 'code-lime-mode';
+                else if (cardData.colorMode === 3) codeBgClass = 'code-white-mode';
 
                 card.innerHTML = `
                     <div class="card-controls">
-                        <button class="btn-action btn-toggle-green" onclick="toggleVersion(${index}, false, event)">轉正常</button>
-                        <button class="btn-action btn-toggle-purple" onclick="toggleVersion(${index}, true, event)">轉魔德</button>
-                        <button class="btn-action btn-del" onclick="deleteSingleCard(${index}, event)">×</button>
+                        <button class="btn-action" style="background:#2da94f;" onclick="changeCardColor(${index}, 0)">森林</button>
+                        <button class="btn-action" style="background:#8a2be2;" onclick="changeCardColor(${index}, 1)">魔德</button>
+                        <button class="btn-action btn-del" onclick="deleteCard(${index})">刪除</button>
                     </div>
-                    <div class="card-img-box">${imgHtml}</div>
+                    <div class="card-img-box" onclick="checkAndApplyImage(this.parentElement, ${index})">${imgHtml}</div>
                     <h3 class="${nameClass}">${cardData.name}</h3>
-                    <button class="btn-copy ${btnClass}" onclick="copyCode('${cardData.code}', event)">${prefixText}${cardData.code}</button>
+                    <div class="code-clickable ${codeBgClass}" title="點擊直接複製最乾淨的純代碼" onclick="copyCode('${cardData.code}')">
+                        ${cardData.code}
+                    </div>
                 `;
                 container.appendChild(card);
             });
         }
 
-        function toggleVersion(index, isModTarget, event) {
-            event.stopPropagation();
-            cardDatabase[index].isMod = isModTarget;
-            saveToLocalStorage();
+        function changeCardColor(index, mode) {
+            cardDatabase[index].colorMode = mode;
+            saveData();
             renderDatabase();
-            showToast(isModTarget ? "已手動校正為：魔德 (紫色)" : "已手動校正為：正常 (綠色)");
+            showToast(mode === 1 ? "已變更底色為【魔德紫】" : "已變更底色為【森林綠】");
         }
 
-        function generateCards() {
-            const text = document.getElementById('inputText').value;
-            if (!text.trim()) { alert("請先貼上 Excel 文字！"); return; }
-            const lines = text.split('\n');
-            let newCount = 0;
-            lines.forEach((line) => {
-                if (!line.trim()) return;
-                const columns = line.split('\t');
-                const validCells = columns.map(c => c.trim()).filter(c => c !== '');
-                if (validCells.length >= 2) {
-                    let code = validCells[0]; 
-                    let name = validCells[1]; 
-                    if (code === "代碼" || code === "code" || code === "名稱" || code.includes("欄")) return;
-                    const isExist = cardDatabase.some(item => item.code === code);
-                    if (!isExist) {
-                        let initialMod = false;
-                        if (line.includes("魔德")) { initialMod = true; }
-                        cardDatabase.push({ code: code, name: name, img: null, fullLine: line, isMod: initialMod });
-                        newCount++;
-                    }
-                }
-            });
-            saveToLocalStorage();
+        fn = function deleteCard(index) {
+            cardDatabase.splice(index, 1);
+            saveData();
             renderDatabase();
-            document.getElementById('inputText').value = '';
-            if(newCount > 0) { showToast(`成功匯入 ${newCount} 筆新卡片！`); } 
-            else { showToast(`資料已同步。`); }
+            showToast("卡片已刪除");
+        }
+        window.deleteCard = fn;
+
+        function copyCode(code) {
+            const fullOutput = `${code}`.trim(); 
+            if (navigator.clipboard && navigator.clipboard.writeText) {
+                navigator.clipboard.writeText(fullOutput).then(() => {
+                    showOutputToast(`已成功複製純代碼: ${fullOutput}`);
+                }).catch(() => { fallbackCopy(fullOutput); });
+            } else { fallbackCopy(fullOutput); }
         }
 
-        document.getElementById('imgUpload').addEventListener('change', function(e) {
-            const files = e.target.files;
-            const pool = document.getElementById('poolGrid');
-            for (let i = 0; i < files.length; i++) {
-                const file = files[i];
-                const reader = new FileReader();
-                reader.onload = function(event) {
-                    const item = document.createElement('div');
-                    item.className = 'pool-item';
-                    item.innerHTML = `<img src="${event.target.result}">`;
-                    item.onclick = function() { selectPoolImage(this, event.target.result); };
-                    pool.appendChild(item);
-                };
-                reader.readAsDataURL(file);
-            }
-        });
-
-        function selectPoolImage(element, src) {
-            if (selectedPoolItem) { selectedPoolItem.classList.remove('selected'); }
-            selectedImgSrc = src;
-            selectedPoolItem = element;
-            element.classList.add('selected');
-            document.querySelectorAll('.card').forEach(card => { card.classList.add('targetable'); });
-        }
-
-        function checkAndApplyImage(cardElement, index) {
-            if (!selectedImgSrc) return;
-            cardDatabase[index].img = selectedImgSrc;
-            saveToLocalStorage();
-            renderDatabase();
-            selectedPoolItem.remove(); 
-            selectedImgSrc = null;
-            selectedPoolItem = null;
-            document.querySelectorAll('.card').forEach(card => { card.classList.remove('targetable'); });
-            showToast("圖片配對已永久儲存！");
-        }
-
-        function deleteSingleCard(index, event) {
-            event.stopPropagation();
-            if(confirm("確定要刪除這張卡片嗎？")) {
-                cardDatabase.splice(index, 1);
-                saveToLocalStorage();
-                renderDatabase();
-            }
-        }
-
-        function clearAllData() {
-            if (confirm("🚨 警告：這會刪除目前網頁記住的所有卡片與圖片！確定要清空嗎？")) {
-                cardDatabase = [];
-                localStorage.removeItem('beetleManualDatabase');
-                renderDatabase();
-                showToast("記憶庫已全數清空。");
-            }
-        }
-
-        function saveToLocalStorage() { localStorage.setItem('beetleManualDatabase', JSON.stringify(cardDatabase)); }
-
-        function copyCode(text, event) {
-            event.stopPropagation(); 
+        function fallbackCopy(text) {
             const textArea = document.createElement("textarea");
             textArea.value = text;
-            textArea.style.position = "fixed"; 
-            textArea.style.left = "-999999px";
-            textArea.style.top = "-999999px";
+            textArea.style.position = "fixed";
+            textArea.style.top = "0"; textArea.style.left = "0";
+            textArea.style.width = "2em"; textArea.style.height = "2em";
+            textArea.style.padding = "0"; textArea.style.border = "none";
+            textArea.style.outline = "none"; textArea.style.boxShadow = "none";
+            textArea.style.background = "transparent";
             document.body.appendChild(textArea);
-            textArea.focus();
-            textArea.select();
-            textArea.setSelectionRange(0, 99999); 
+            textArea.focus(); textArea.select();
             try {
-                document.execCommand('copy');
-                showToast('📋 已複製代碼：' + text);
-            } catch (err) {
-                navigator.clipboard.writeText(text).then(() => {
-                    showToast('📋 已複製代碼：' + text);
-                }).catch(e => {
-                    alert('複製失敗，請長按複製：' + text);
-                });
-            }
+                const successful = document.execCommand('copy');
+                if (successful) showOutputToast(`已成功複製純代碼: ${text}`);
+                else showToast("複製失敗，請手動選取複製");
+            } catch (err) { showToast("瀏覽器不支援複製，請檢查權限"); }
             document.body.removeChild(textArea);
         }
 
-        function showToast(msg) {
+        function saveData() { localStorage.setItem('beetleManualDatabase', JSON.stringify(cardDatabase)); }
+
+        function clearAllData() {
+            if (confirm("確定要清空所有的卡片資料與圖片嗎？此動作無法復原。")) {
+                cardDatabase = [];
+                localStorage.removeItem('beetleManualDatabase');
+                document.getElementById('poolGrid').innerHTML = '';
+                renderDatabase();
+                showToast("資料已完全清空");
+            }
+        }
+
+        function showToast(message) {
             const toast = document.getElementById('toast');
-            toast.innerText = msg;
+            toast.innerText = message;
             toast.style.display = 'block';
-            setTimeout(() => { toast.style.display = 'none'; }, 1200);
+            setTimeout(() => { toast.style.display = 'none'; }, 2000);
+        }
+
+        function showOutputToast(message) {
+            const toast = document.getElementById('toast');
+            toast.innerText = message;
+            toast.style.display = 'block';
+            setTimeout(() => { toast.style.display = 'none'; }, 3000);
         }
     </script>
 </body>
